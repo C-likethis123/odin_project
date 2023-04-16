@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Rock Paper Scissors</title>
+    <link rel="stylesheet" href="game.css">
+</head>
+
+<body>
+    <div id="game">
+        <h1> Rock Paper Scissors</h1>
+        <p>First to reach 5 points win!</p>
+        <p class="resultDisplay display"></p>
+        <p class="winnerAnnouncement display"></p>
+        <div id="scores">
+            <div id="player-score">
+                You: 0
+            </div>
+            <div id="computer-score">
+                Computer: 0
+            </div>
+        </div>
+        <div class="choices">
+            <div>
+                <button class="game-button" id="rock" value="Rock"></button>
+                <div>Rock</div>
+            </div>
+            <div>
+                <button class="game-button" id="paper" value="Paper"></button>
+                <div>Paper</div>
+            </div>
+            <div>
+                <button class="game-button" id="scissors" value="Scissors"></button>
+                <div>Scissors</div>
+            </div>
+        </div>
+    </div>
+
+    <script language="javascript">
+        const valid_options = ['Rock', 'Paper', 'Scissors'];
+
+        function computerPlay() {
+            let randomIndex = Math.floor(Math.random() * 3);
+            return valid_options[randomIndex];
+        }
+
+        function capitalize(string) {
+            return string[0].toUpperCase() + string.substring(1).toLowerCase();
+        }
+
+        function playRound(playerSelection, computerSelection) {
+            playerSelection = capitalize(playerSelection);
+            if (playerSelection == computerSelection) {
+                return "tie";
+            } else if (playerSelection == "Scissors") {
+                return computerSelection == "Paper"
+                    ? "win"
+                    : "lose";
+
+            } else if (playerSelection == "Rock") {
+                return computerSelection == "Scissors"
+                    ? "win"
+                    : "lose";
+
+            } else if (playerSelection == "Paper") {
+                return computerSelection == "Rock"
+                    ? "win"
+                    : "lose";
+            } else {
+                console.log("You entered an invalid value!");
+            }
+        }
+
+        function getOutput(playerSelection, computerSelection, outcome) {
+            if (outcome == "tie") {
+                return "It's a tie! Both chose " + playerSelection;
+            } else if (outcome == "win") {
+                return "You win! " + playerSelection + " beats " + computerSelection;
+            } else {
+                return "You lose! " + playerSelection + " loses to " + computerSelection;
+            }
+        }
+
+        function createOutputDisplay(outputString, playerScore, computerScore) {
+            const resultDisplay = document.querySelector('.resultDisplay');
+            resultDisplay.textContent = outputString;
+
+            const playerScoreBoard = document.querySelector('#player-score');
+            playerScoreBoard.textContent = `You: ${playerScore}`;
+            const computerScoreBoard = document.querySelector('#computer-score');
+            computerScoreBoard.textContent = `Computer: ${computerScore}`;
+        }
+
+        function announceWinner(playerScore, computerScore) {
+            let announcement = playerScore > computerScore
+                ? "You win!"
+                : "Computer wins!";
+
+            const winnerAnnouncement = document.querySelector('.winnerAnnouncement');
+            winnerAnnouncement.textContent = announcement;
+        }
+
+        function resetGame() {
+            playerScore = 0, computerScore = 0;
+            const listOfDisplays = document.querySelectorAll('.display');
+            listOfDisplays.forEach(display => display.textContent = "");
+
+            const playerScoreBoard = document.querySelector('#player-score');
+            playerScoreBoard.textContent = `You: ${playerScore}`;
+            const computerScoreBoard = document.querySelector('#computer-score');
+            computerScoreBoard.textContent = `Computer: ${computerScore}`;
+        }
+
+        function promptAnotherGame() {
+            const winnerAnnouncement = document.querySelector('.winnerAnnouncement');
+            const playAgainButton = document.createElement('button');
+            playAgainButton.textContent = "Play Again?";
+            playAgainButton.id = "play-again";
+
+            winnerAnnouncement.appendChild(playAgainButton);
+
+            playAgainButton.addEventListener('click', resetGame);
+        }
+
+
+        let playerScore = 0, computerScore = 0;
+        const buttons = document.querySelectorAll('.game-button');
+        let playerSelection;
+
+        buttons.forEach(button => button.addEventListener('click', function (e) {
+            let playerSelection = e.target.value;
+            let computerSelection = computerPlay();
+            let outcome = playRound(playerSelection, computerSelection);
+            if (outcome == "win") {
+                playerScore++;
+            }
+
+            if (outcome == "lose") {
+                computerScore++;
+            }
+            let outputString = getOutput(playerSelection, computerSelection, outcome);
+
+            createOutputDisplay(outputString, playerScore, computerScore);
+
+            if (playerScore == 5 || computerScore == 5) {
+                announceWinner(playerScore, computerScore);
+                promptAnotherGame();
+            }
+        }))
+
+    </script>
+</body>
+
+</html>

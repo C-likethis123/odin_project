@@ -1,0 +1,29 @@
+h1, p {
+	text-align: center;
+	font-family: helvetica;
+}
+
+.container {
+	display: grid;
+	height: 600px;
+	width: 600px;
+	--numberOfSquares: 16;
+	grid-template-rows: repeat(var(--numberOfSquares), 1fr);
+	grid-template-columns: repeat(var(--numberOfSquares), 1fr);
+
+	border : 10px solid red;
+	border-radius: 24px;
+}
+
+.lineOfDivs {
+	display: grid;
+	
+}
+
+.grid {
+	background-color: #f0f0f0;
+}
+
+.hovered {
+	background-color: black;
+}

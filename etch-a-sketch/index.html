@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Etch-a-Sketch</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<center>
+		<h1>Etch-a-Sketch!</h1>
+		<p>Mouse over the grids to draw! <button onclick="resetGrids()">Reset</button></p>
+		<div class="container"></div>
+	</center>
+
+	<script language="javascript">
+		const container = document.querySelector('.container');
+		container.classList.add('container');
+		
+		function createGrid(numberOfSquares=16) {	
+			container.style.setProperty('--numberOfSquares', numberOfSquares);
+
+			for (let i = 0; i < numberOfSquares; i++) {
+				let newLineDiv = document.createElement('div');
+				for (let j = 0; j < numberOfSquares; j++) {
+					let newSquareDiv = document.createElement('div');
+					newSquareDiv.classList.add('grid');
+					container.appendChild(newSquareDiv);
+					
+				}
+			}
+
+			const listOfGrids = document.querySelectorAll('.grid');
+			listOfGrids.forEach(grid => grid.addEventListener('mouseover', function(e) {
+				e.target.classList.add('hovered');
+			}))
+		}
+
+		function getNumberOfSquares() {
+			let userAnswer = parseInt(prompt("How many squares per side do you want for the new grid? Choose a number between 1 to 100"));
+			if (!userAnswer) {
+				return null;
+			}
+
+			while (isNaN(userAnswer) || userAnswer < 1 || userAnswer > 100) {
+				userAnswer = prompt("That's not a valid input! How many squares per side do you want for the new grid?");
+			}
+
+			return (+userAnswer);
+		}
+
+		function resetGrids() {
+			const numberOfSquares = getNumberOfSquares();
+
+			if (numberOfSquares != null) {
+				const listOfGrids = document.querySelectorAll('.grid');
+				listOfGrids.forEach(row => container.removeChild(row));
+				createGrid(numberOfSquares);
+			}
+		}
+
+		createGrid();
+	</script>
+</body>
+</html>
